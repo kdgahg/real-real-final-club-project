@@ -1,75 +1,76 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class NewBehaviourScript : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
-    public Vector2 inputVec;
     public float speed;
-    Rigidbody2D rigid;
-    SpriteRenderer spriteRenderer;
-    Animator anim;
+    public float jumpForce;
+    private Rigidbody2D rigid;
+    private SpriteRenderer spriteRenderer;
+    private Animator anim;
     private bool isGrounded;
-    public float jumpPower;
-    // Start is called before the first frame update
-    void Awake()
+
+    private float moveInput;
+
+    private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
     }
-       void Update()
-    {
-        if (isGrounded) 
-        {
-            if (Input.GetButtonDown("Jump"))
-                rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
 
+    private void Update()
+    {
+        // 이동 입력 처리
+        moveInput = Input.GetAxis("Horizontal");
+
+        // 점프 처리
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        {
+            rigid.velocity = new Vector2(rigid.velocity.x, jumpForce);
         }
-        if (Input.GetButtonUp("Horizontal"))
-            rigid.velocity = new Vector2(rigid.velocity.normalized.x * 0.5f, rigid.velocity.y);
-        if (Input.GetButtonDown("Horizontal"))
-            spriteRenderer.flipX = Input.GetAxisRaw("Horizontal") == -1;
-        if (Mathf.Abs(rigid.velocity.x) > 0.3f)
+
+        // 애니메이션 처리
+        if (Mathf.Abs(moveInput) > 0.3f)
         {
             anim.SetBool("isRun", true);
-            Debug.Log("a");
         }
         else
         {
             anim.SetBool("isRun", false);
-            Debug.Log("b");
+        }
+
+        // 이동 방향에 따라 스프라이트 반전
+        if (moveInput != 0)
+        {
+            spriteRenderer.flipX = moveInput < 0;
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        float h = Input.GetAxisRaw("Horizontal");
+        // 이동 처리
+        rigid.velocity = new Vector2(moveInput * speed, rigid.velocity.y);
+    }
 
-        rigid.AddForce(Vector2.right * h, ForceMode2D.Impulse);
-        Vector2 nextVec = inputVec.normalized * speed * Time.fixedDeltaTime;
-        rigid.MovePosition(rigid.position + nextVec);
-    }
-    void OnMove(InputValue value)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        inputVec = value.Get<Vector2>();
-    }
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.contacts.Length > 0)
+        // 바닥에 닿았을 때 점프 가능 상태로 변경
+        if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
-            Debug.Log("true");
         }
     }
 
-    void OnCollisionExit2D(Collision2D collision)
+    private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.contacts.Length > 0)
+        // 바닥에서 벗어날 때 점프 불가능 상태로 변경
+        if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = false;
-            Debug.Log("false");
         }
     }
 }
+
+
