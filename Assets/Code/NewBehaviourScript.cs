@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rigid.velocity = new Vector2(rigid.velocity.x, jumpForce);
+            anim.SetBool("isJump", true);
         }
 
         // 애니메이션 처리
@@ -59,7 +60,9 @@ public class PlayerController : MonoBehaviour
         // 바닥에 닿았을 때 점프 가능 상태로 변경
         if (collision.gameObject.CompareTag("Ground"))
         {
+            
             isGrounded = true;
+            anim.SetBool("isJump", false);
         }
     }
 
