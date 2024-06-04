@@ -12,12 +12,16 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
 
     private float moveInput;
+    
+    public UserInterface UserInterface;
 
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+
+
     }
 
     private void Update()
@@ -30,6 +34,11 @@ public class PlayerController : MonoBehaviour
         {
             rigid.velocity = new Vector2(rigid.velocity.x, jumpForce);
             anim.SetBool("isJump", true);
+        }
+        if (rigid.velocity.y < 0 ) 
+        {
+            anim.SetBool("isJump", false);
+            anim.SetBool("isFall", true);
         }
 
         // 局聪皋捞记 贸府
