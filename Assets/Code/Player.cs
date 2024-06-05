@@ -12,12 +12,16 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
 
     private float moveInput;
+    
+    public UserInterface UserInterface;
 
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+
+
     }
 
     private void Update()
@@ -29,6 +33,12 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rigid.velocity = new Vector2(rigid.velocity.x, jumpForce);
+            anim.SetBool("isJump", true);
+        }
+        if (rigid.velocity.y < 0 ) 
+        {
+            anim.SetBool("isJump", false);
+            anim.SetBool("isFall", true);
         }
 
         // 애니메이션 처리
@@ -59,7 +69,9 @@ public class PlayerController : MonoBehaviour
         // 바닥에 닿았을 때 점프 가능 상태로 변경
         if (collision.gameObject.CompareTag("Ground"))
         {
+            
             isGrounded = true;
+            anim.SetBool("isJump", false);
         }
     }
 
