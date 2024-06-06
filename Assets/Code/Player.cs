@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
         // 이동 입력 처리
         moveInput = Input.GetAxis("Horizontal");
 
+       
+
         // 점프 처리
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
@@ -58,16 +60,7 @@ public class PlayerController : MonoBehaviour
         rigid.velocity = new Vector2(moveInput * speed, rigid.velocity.y);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        // 바닥에 닿았을 때 점프 가능 상태로 변경
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            
-            isGrounded = true;
-            anim.SetBool("isJump", false);
-        }
-    }
+    
 
     private void OnCollisionExit2D(Collision2D collision)
     {
@@ -77,6 +70,45 @@ public class PlayerController : MonoBehaviour
             isGrounded = false;
         }
     }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // 바닥에 닿았을 때 점프 가능 상태로 변경
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+
+            isGrounded = true;
+            anim.SetBool("isJump", false);
+        }
+
+        if (collision.gameObject.tag == "trap")//trap에 닿았을떄 상호작용
+        {
+            OnDamaged(collision.transform.position);
+        }
+
+        
+    }
+    private void OnDamaged(Vector2 targetPos)
+    {
+        gameObject.layer = 11;//layer 바꾸기
+
+        spriteRenderer.color = new Color(1, 1, 1, 0.4f);//히트 시 색변경& 투명화
+
+        int dirc = transform.position.x - targetPos.x > 0 ? 1 : -1;
+        
+        rigid.AddForce(new Vector2(dirc, 1) * 4, ForceMode2D.Impulse);//히드 시 팅겨나가는 정도 x축이동 X 버그인듯?? input이랑 충돌일수도
+
+        Invoke("OffDamaged", 1);// 무적시간 해제
+    }
+
+
+    void OffDamaged()
+    {
+        gameObject.layer = 10;//layer 바꾸기
+
+        spriteRenderer.color = new Color(1, 1, 1, 1);
+    }
+
+
 }
 
 
