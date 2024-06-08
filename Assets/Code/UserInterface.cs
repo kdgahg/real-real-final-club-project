@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,9 +8,12 @@ public class UserInterface : MonoBehaviour
 {
     // HpBar Slider를 연동하기 위한 Slider 객체
     [SerializeField] private Slider _hpBar;
-
+    [SerializeField] private Slider _StBar;
     // 플레이어의 HP
-    private int _hp;
+    public int _hp;
+    public float _st;
+    public float RegenS;
+
 
     public int Hp
     {
@@ -23,6 +27,7 @@ public class UserInterface : MonoBehaviour
     {
         _hp = 100;
         SetMaxHealth(100); // MaxValue를 세팅하는 함수입니다.
+        SetMaxStamina(100);
     }
 
     public void SetMaxHealth(int health)
@@ -30,6 +35,17 @@ public class UserInterface : MonoBehaviour
         _hpBar.maxValue = health;
         _hpBar.value = health;
         _hp = health; // 슬라이더 값을 설정한 후 hp 값을 동기화
+    }
+    public void SetMaxStamina(int Stamina)
+    {
+        _StBar.maxValue = Stamina;
+        _StBar.value = Stamina;
+        _st = Stamina; // 슬라이더 값을 설정한 후 hp 값을 동기화
+    }
+    public void UseStamina(int stamina)
+    {
+        _StBar.value -= stamina;
+        _st -= stamina;
     }
 
     // 플레이어가 대미지를 받으면 대미지 값을 전달 받아 HP에 반영합니다.
@@ -44,6 +60,11 @@ public class UserInterface : MonoBehaviour
         Hp += heal;
         _hpBar.value = Hp;
     }
+    public void RegenStamina(float Regen)
+    {
+        _StBar.value += Regen*1/10;
+        _st += Regen * 1 / 10;
+    }
 
     private void Update()
     {
@@ -51,5 +72,9 @@ public class UserInterface : MonoBehaviour
         {
             _hp = (int)_hpBar.value;
         }
+    }
+    private void FixedUpdate()
+    {
+        RegenStamina(RegenS);
     }
 }

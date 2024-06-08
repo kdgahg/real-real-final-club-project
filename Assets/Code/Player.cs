@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     
     public UserInterface UserInterface;
 
+
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -29,12 +30,13 @@ public class PlayerController : MonoBehaviour
         moveInput = Input.GetAxis("Horizontal");
 
        
-
+        if(UserInterface._st>=10)
         // 점프 처리
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rigid.velocity = new Vector2(rigid.velocity.x, jumpForce);
             anim.SetBool("isJump", true);
+            UserInterface.UseStamina(30);
         }
 
         // 애니메이션 처리
@@ -99,6 +101,10 @@ public class PlayerController : MonoBehaviour
         rigid.AddForce(new Vector2(dirc, 1) * 4, ForceMode2D.Impulse); // 히트 시 팅겨나가는 힘을 가함
 
         Invoke("OffDamaged", 1); // 무적시간 해제
+    }
+    private void Stamina(int Sta)
+    {
+        UserInterface.GetDamage(Sta);
     }
 
 
