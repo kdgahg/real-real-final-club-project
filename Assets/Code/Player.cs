@@ -82,22 +82,23 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.tag == "trap")//trap에 닿았을떄 상호작용
         {
-            OnDamaged(collision.transform.position);
+            OnDamaged(transform.position);
         }
 
         
     }
     private void OnDamaged(Vector2 targetPos)
     {
-        gameObject.layer = 11;//layer 바꾸기
+        gameObject.layer = 11; // layer 바꾸기
 
-        spriteRenderer.color = new Color(1, 1, 1, 0.4f);//히트 시 색변경& 투명화
+        spriteRenderer.color = new Color(1, 1, 1, 0.4f); // 히트 시 색변경& 투명화
 
-        int dirc = transform.position.x - targetPos.x > 0 ? 1 : -1;
-        
-        rigid.AddForce(new Vector2(dirc, 1) * 4, ForceMode2D.Impulse);//히드 시 팅겨나가는 정도 x축이동 X 버그인듯?? input이랑 충돌일수도
+        int dirc = rigid.velocityX > 0 ? 1 : -1;
 
-        Invoke("OffDamaged", 1);// 무적시간 해제
+        rigid.velocity = Vector2.zero; // 기존 속도를 초기화
+        rigid.AddForce(new Vector2(dirc, 1) * 4, ForceMode2D.Impulse); // 히트 시 팅겨나가는 힘을 가함
+
+        Invoke("OffDamaged", 1); // 무적시간 해제
     }
 
 
