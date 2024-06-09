@@ -15,12 +15,12 @@ public class PlayerController : MonoBehaviour
     
     public UserInterface UserInterface;
 
+
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
-
 
     }
 
@@ -29,16 +29,14 @@ public class PlayerController : MonoBehaviour
         // 이동 입력 처리
         moveInput = Input.GetAxis("Horizontal");
 
+       
+        if(UserInterface._st>=10)
         // 점프 처리
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rigid.velocity = new Vector2(rigid.velocity.x, jumpForce);
             anim.SetBool("isJump", true);
-        }
-        if (rigid.velocity.y < 0 ) 
-        {
-            anim.SetBool("isJump", false);
-            anim.SetBool("isFall", true);
+            UserInterface.UseStamina(30);
         }
 
         // 애니메이션 처리
@@ -64,16 +62,7 @@ public class PlayerController : MonoBehaviour
         rigid.velocity = new Vector2(moveInput * speed, rigid.velocity.y);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        // 바닥에 닿았을 때 점프 가능 상태로 변경
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            
-            isGrounded = true;
-            anim.SetBool("isJump", false);
-        }
-    }
+    
 
     private void OnCollisionExit2D(Collision2D collision)
     {
@@ -83,6 +72,50 @@ public class PlayerController : MonoBehaviour
             isGrounded = false;
         }
     }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // 바닥에 닿았을 때 점프 가능 상태로 변경
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+
+            isGrounded = true;
+            anim.SetBool("isJump", false);
+        }
+
+        if (collision.gameObject.tag == "trap")//trap에 닿았을떄 상호작용
+        {
+            OnDamaged(transform.position);
+        }
+
+        
+    }
+    private void OnDamaged(Vector2 targetPos)
+    {
+        gameObject.layer = 11; // layer 바꾸기
+
+        spriteRenderer.color = new Color(1, 1, 1, 0.4f); // 히트 시 색변경& 투명화
+
+        int dirc = rigid.velocityX > 0 ? 1 : -1;
+
+        rigid.velocity = Vector2.zero; // 기존 속도를 초기화
+        rigid.AddForce(new Vector2(dirc, 1) * 4, ForceMode2D.Impulse); // 히트 시 팅겨나가는 힘을 가함
+
+        Invoke("OffDamaged", 1); // 무적시간 해제
+    }
+    private void Stamina(int Sta)
+    {
+        UserInterface.GetDamage(Sta);
+    }
+
+
+    void OffDamaged()
+    {
+        gameObject.layer = 10;//layer 바꾸기
+
+        spriteRenderer.color = new Color(1, 1, 1, 1);
+    }
+
+
 }
 
 
