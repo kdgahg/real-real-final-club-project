@@ -86,22 +86,51 @@ public class PlayerController : MonoBehaviour
         {
             OnDamaged(transform.position);
         }
+        if (collision.gameObject.tag == "Enemy")//trap에 닿았을떄 상호작용
+        {
+            OnDamaged1(transform.position);
+        }
 
-        
+
+
     }
     private void OnDamaged(Vector2 targetPos)
     {
+        rigid.velocity = Vector2.zero; // 기존 속도를 초기화
         gameObject.layer = 11; // layer 바꾸기
+        
 
         spriteRenderer.color = new Color(1, 1, 1, 0.4f); // 히트 시 색변경& 투명화
 
         int dirc = rigid.velocityX > 0 ? 1 : -1;
 
-        rigid.velocity = Vector2.zero; // 기존 속도를 초기화
-        rigid.AddForce(new Vector2(dirc, 1) * 4, ForceMode2D.Impulse); // 히트 시 팅겨나가는 힘을 가함
+        if(dirc == 1)
+        {
+            rigid.AddForce(new Vector2(8, 1) * 4, ForceMode2D.Impulse); // 히트 시 팅겨나가는 힘을 가함
+            
+         }
+        else
+        {
+            rigid.AddForce(new Vector2(-8, 1) * 4, ForceMode2D.Impulse); // 히트 시 팅겨나가는 힘을 가함
+        }
+
 
         Invoke("OffDamaged", 1); // 무적시간 해제
     }
+    private void OnDamaged1(Vector2 targetPos)//적한테 히트시 
+    {
+        rigid.velocity = Vector2.zero; // 기존 속도를 초기화
+
+
+
+        int dirc = rigid.velocityX > 0 ? 1 : -1;
+
+        
+        rigid.AddForce(new Vector2(dirc, 1) * 4, ForceMode2D.Impulse); // 히트 시 팅겨나가는 힘을 가함
+
+        
+    }
+
     private void Stamina(int Sta)
     {
         UserInterface.GetDamage(Sta);
