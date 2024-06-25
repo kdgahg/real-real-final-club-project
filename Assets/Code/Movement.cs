@@ -18,10 +18,10 @@ public class movement : MonoBehaviour
 
     void Update()
     {
-        //Á¡ÇÁ
+        //ï¿½ï¿½ï¿½ï¿½
         if (Input.GetButtonDown("Jump"))
             rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
-        //¼Óµµ°¨¼Ò
+        //ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½
         if (Input.GetButtonUp("Horizontal"))
             rigid.velocity = new Vector2(rigid.velocity.normalized.x * 0.5f,rigid.velocity.y);
         if (Input.GetButtonDown("Horizontal"))
@@ -38,9 +38,9 @@ public class movement : MonoBehaviour
 
         rigid.AddForce(Vector2.right * h, ForceMode2D.Impulse);
 
-        if (rigid.velocity.x > maxSpeed)//¿À¸¥ÂÊ ÃÖ´ë ¼Óµµ
+        if (rigid.velocity.x > maxSpeed)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Óµï¿½
             rigid.velocity = new Vector2(maxSpeed, rigid.velocity.y);
-        else if (rigid.velocity.x < maxSpeed*(-1))//¿ÞÂÊ ÃÖ´ë¼Óµµ
+        else if (rigid.velocity.x < maxSpeed*(-1))//ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½Óµï¿½
             rigid.velocity = new Vector2(maxSpeed*(-1), rigid.velocity.y);
     }
 }

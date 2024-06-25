@@ -6,10 +6,10 @@ using UnityEngine.UI;
 
 public class UserInterface : MonoBehaviour
 {
-    // HpBar Slider¸¦ ¿¬µ¿ÇÏ±â À§ÇÑ Slider °´Ã¼
+    // HpBar Sliderï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ Slider ï¿½ï¿½Ã¼
     [SerializeField] private Slider _hpBar;
     [SerializeField] private Slider _StBar;
-    // ÇÃ·¹ÀÌ¾îÀÇ HP
+    // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ HP
     public int _hp;
     public float _st;
     public float RegenS;
@@ -18,15 +18,15 @@ public class UserInterface : MonoBehaviour
     public int Hp
     {
         get => _hp;
-        // HP´Â PlayerController¿¡¼­¸¸ ¼öÁ¤ ÇÏµµ·Ï privateÀ¸·Î Ã³¸®
-        // Mathf.Clamp ÇÔ¼ö¸¦ »ç¿ëÇØ¼­ hp°¡ 0º¸´Ù ¾Æ·¡·Î ¶³¾îÁöÁö ¾Ê°Ô ÇÕ´Ï´Ù.
+        // HPï¿½ï¿½ PlayerControllerï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ïµï¿½ï¿½ï¿½ privateï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
+        // Mathf.Clamp ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ hpï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ ï¿½Õ´Ï´ï¿½.
         private set => _hp = Mathf.Clamp(value, 0, (int)_hpBar.maxValue);
     }
 
     private void Awake()
     {
         _hp = 100;
-        SetMaxHealth(100); // MaxValue¸¦ ¼¼ÆÃÇÏ´Â ÇÔ¼öÀÔ´Ï´Ù.
+        SetMaxHealth(100); // MaxValueï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ô¼ï¿½ï¿½Ô´Ï´ï¿½.
         SetMaxStamina(100);
     }
 
@@ -34,21 +34,26 @@ public class UserInterface : MonoBehaviour
     {
         _hpBar.maxValue = health;
         _hpBar.value = health;
-        _hp = health; // ½½¶óÀÌ´õ °ªÀ» ¼³Á¤ÇÑ ÈÄ hp °ªÀ» µ¿±âÈ­
+        _hp = health; // ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ hp ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­
     }
     public void SetMaxStamina(int Stamina)
     {
         _StBar.maxValue = Stamina;
         _StBar.value = Stamina;
-        _st = Stamina; // ½½¶óÀÌ´õ °ªÀ» ¼³Á¤ÇÑ ÈÄ hp °ªÀ» µ¿±âÈ­
+        _st = Stamina; // ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ hp ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­
     }
     public void UseStamina(int stamina)
     {
         _StBar.value -= stamina;
         _st -= stamina;
     }
+    public void UseHp(int p_Hp)
+    {
+        _hpBar.value -= p_Hp;
+        _hp -= p_Hp;
+    }
 
-    // ÇÃ·¹ÀÌ¾î°¡ ´ë¹ÌÁö¸¦ ¹ÞÀ¸¸é ´ë¹ÌÁö °ªÀ» Àü´Þ ¹Þ¾Æ HP¿¡ ¹Ý¿µÇÕ´Ï´Ù.
+    // ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾ï¿½ HPï¿½ï¿½ ï¿½Ý¿ï¿½ï¿½Õ´Ï´ï¿½.
     public void GetDamage(int damage)
     {
         Hp -= damage;

@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Animator anim;
     private bool isGrounded;
+    public float maxSpeed;
+    public int Trap_damage;
 
     private float moveInput;
     
@@ -26,21 +28,24 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        // ÀÌµ¿ ÀÔ·Â Ã³¸®
-        moveInput = Input.GetAxis("Horizontal");
+        // ï¿½Ìµï¿½ ï¿½Ô·ï¿½ Ã³ï¿½ï¿½
 
        
-        if(UserInterface._st>=10)
-        // Á¡ÇÁ Ã³¸®
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && UserInterface._st>=10)
         {
-            rigid.velocity = new Vector2(rigid.velocity.x, jumpForce);
+            rigid.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             anim.SetBool("isJump", true);
             UserInterface.UseStamina(30);
         }
+        if (Input.GetButtonUp("Horizontal"))
+            rigid.velocity = new Vector2(rigid.velocity.normalized.x * 0.5f,rigid.velocity.y);
+        if (Input.GetButtonDown("Horizontal"))
+            spriteRenderer.flipX = Input.GetAxisRaw("Horizontal") == -1;
 
-        // ¾Ö´Ï¸ÞÀÌ¼Ç Ã³¸®
-        if (Mathf.Abs(moveInput) > 0.3f)
+
+        // ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ Ã³ï¿½ï¿½
+        if (Mathf.Abs(rigid.velocity.x) > 0.3f)
         {
             anim.SetBool("isRun", true);
         }
@@ -49,7 +54,7 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("isRun", false);
         }
 
-        // ÀÌµ¿ ¹æÇâ¿¡ µû¶ó ½ºÇÁ¶óÀÌÆ® ¹ÝÀü
+        // ï¿½Ìµï¿½ ï¿½ï¿½ï¿½â¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
         if (moveInput != 0)
         {
             spriteRenderer.flipX = moveInput < 0;
@@ -58,15 +63,21 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // ÀÌµ¿ Ã³¸®
-        rigid.velocity = new Vector2(moveInput * speed, rigid.velocity.y);
+         float h = Input.GetAxisRaw("Horizontal");
+
+        rigid.AddForce(Vector2.right * h, ForceMode2D.Impulse);
+
+        if (rigid.velocity.x > maxSpeed)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Óµï¿½
+            rigid.velocity = new Vector2(maxSpeed, rigid.velocity.y);
+        else if (rigid.velocity.x < maxSpeed*(-1))//ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½Óµï¿½
+            rigid.velocity = new Vector2(maxSpeed*(-1), rigid.velocity.y);
     }
 
     
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        // ¹Ù´Ú¿¡¼­ ¹þ¾î³¯ ¶§ Á¡ÇÁ ºÒ°¡´É »óÅÂ·Î º¯°æ
+        // ï¿½Ù´Ú¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î³¯ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = false;
@@ -74,7 +85,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // ¹Ù´Ú¿¡ ´ê¾ÒÀ» ¶§ Á¡ÇÁ °¡´É »óÅÂ·Î º¯°æ
+        // ï¿½Ù´Ú¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (collision.gameObject.CompareTag("Ground"))
         {
 
@@ -82,11 +93,11 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("isJump", false);
         }
 
-        if (collision.gameObject.tag == "trap")//trap¿¡ ´ê¾ÒÀ»‹š »óÈ£ÀÛ¿ë
+        if (collision.gameObject.tag == "trap")//trapï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½
         {
             OnDamaged(transform.position);
         }
-        if (collision.gameObject.tag == "Enemy")//trap¿¡ ´ê¾ÒÀ»‹š »óÈ£ÀÛ¿ë
+        if (collision.gameObject.tag == "Enemy")//trapï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½
         {
             OnDamaged1(transform.position);
         }
@@ -96,37 +107,37 @@ public class PlayerController : MonoBehaviour
     }
     private void OnDamaged(Vector2 targetPos)
     {
-        rigid.velocity = Vector2.zero; // ±âÁ¸ ¼Óµµ¸¦ ÃÊ±âÈ­
-        gameObject.layer = 11; // layer ¹Ù²Ù±â
+        UserInterface.UseHp(Trap_damage);
+        rigid.velocity = Vector2.zero; // ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
+        gameObject.layer = 11; // layer ï¿½Ù²Ù±ï¿½
         
 
-        spriteRenderer.color = new Color(1, 1, 1, 0.4f); // È÷Æ® ½Ã »öº¯°æ& Åõ¸íÈ­
+        spriteRenderer.color = new Color(1, 1, 1, 0.4f); // ï¿½ï¿½Æ® ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½& ï¿½ï¿½ï¿½ï¿½È­
 
         int dirc = rigid.velocityX > 0 ? 1 : -1;
 
         if(dirc == 1)
         {
-            rigid.AddForce(new Vector2(8, 1) * 4, ForceMode2D.Impulse); // È÷Æ® ½Ã ÆÃ°Ü³ª°¡´Â ÈûÀ» °¡ÇÔ
-            
+            rigid.AddForce(new Vector2(8, 1) * 4, ForceMode2D.Impulse); // ï¿½ï¿½Æ® ï¿½ï¿½ ï¿½Ã°Ü³ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
          }
         else
         {
-            rigid.AddForce(new Vector2(-8, 1) * 4, ForceMode2D.Impulse); // È÷Æ® ½Ã ÆÃ°Ü³ª°¡´Â ÈûÀ» °¡ÇÔ
+            rigid.AddForce(new Vector2(-8, 1) * 4, ForceMode2D.Impulse); // ï¿½ï¿½Æ® ï¿½ï¿½ ï¿½Ã°Ü³ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         }
 
 
-        Invoke("OffDamaged", 1); // ¹«Àû½Ã°£ ÇØÁ¦
+        Invoke("OffDamaged", 1); // ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
-    private void OnDamaged1(Vector2 targetPos)//ÀûÇÑÅ× È÷Æ®½Ã 
+    private void OnDamaged1(Vector2 targetPos)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ 
     {
-        rigid.velocity = Vector2.zero; // ±âÁ¸ ¼Óµµ¸¦ ÃÊ±âÈ­
+        rigid.velocity = Vector2.zero; // ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
 
 
 
         int dirc = rigid.velocityX > 0 ? 1 : -1;
 
         
-        rigid.AddForce(new Vector2(dirc, 1) * 4, ForceMode2D.Impulse); // È÷Æ® ½Ã ÆÃ°Ü³ª°¡´Â ÈûÀ» °¡ÇÔ
+        rigid.AddForce(new Vector2(dirc, 1) * 4, ForceMode2D.Impulse); // ï¿½ï¿½Æ® ï¿½ï¿½ ï¿½Ã°Ü³ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
         
     }
@@ -139,7 +150,7 @@ public class PlayerController : MonoBehaviour
 
     void OffDamaged()
     {
-        gameObject.layer = 10;//layer ¹Ù²Ù±â
+        gameObject.layer = 10;//layer ï¿½Ù²Ù±ï¿½
 
         spriteRenderer.color = new Color(1, 1, 1, 1);
     }
