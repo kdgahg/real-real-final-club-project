@@ -134,7 +134,9 @@ public class PlayerController : MonoBehaviour
         isDamaged = true; // 피해 상태 설정
 
         int dirc = rigid.velocity.x > 0 ? 1 : -1;
-        rigid.AddForce(new Vector2(dirc, 1) * 4, ForceMode2D.Impulse); // 반대 방향으로 밀어내기
+        rigid.AddForce(new Vector2(dirc, 0) * 4, ForceMode2D.Impulse); // 반대 방향으로 밀어내기
+
+        Invoke("OffDamaged", 1); // 일정 시간 후 피해 상태 해제
     }
 
     private void Stamina(int Sta)

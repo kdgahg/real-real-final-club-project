@@ -67,7 +67,7 @@ public class UserInterface : MonoBehaviour
     }
     public void RegenStamina(float Regen)
     {
-        _StBar.value += Regen*1/10;
+        _StBar.value += Regen * 1 / 10;
         _st += Regen * 1 / 10;
     }
 
