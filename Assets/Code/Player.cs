@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
     public float speed;
     public float jumpForce;
     private Rigidbody2D rigid;
@@ -94,13 +93,13 @@ public class PlayerController : MonoBehaviour
         // 트랩에 부딪혔을 때
         if (collision.gameObject.tag == "trap")
         {
-            OnDamaged(transform.position);
+            OnDamaged(collision.transform.position);
         }
 
         // 적에 부딪혔을 때
         if (collision.gameObject.tag == "Enemy")
         {
-            OnDamaged1(transform.position);
+            OnDamaged1(collision.transform.position);
         }
     }
 
@@ -113,16 +112,9 @@ public class PlayerController : MonoBehaviour
 
         isDamaged = true; // 피해 상태 설정
 
-        int dirc = rigid.velocity.x > 0 ? 1 : -1;
-
-        if (dirc == 1)
-        {
-            rigid.AddForce(new Vector2(0.5f, 1) * 4, ForceMode2D.Impulse); // 반대 방향으로 밀어내기
-        }
-        else
-        {
-            rigid.AddForce(new Vector2(-0.5f, 1) * 4, ForceMode2D.Impulse); // 반대 방향으로 밀어내기
-        }
+        // Calculate direction based on the target position
+        Vector2 hitDirection = (transform.position - (Vector3)targetPos).normalized;
+        rigid.AddForce(hitDirection * 4, ForceMode2D.Impulse); // 반대 방향으로 밀어내기
 
         Invoke("OffDamaged", 1); // 일정 시간 후 피해 상태 해제
     }
@@ -133,8 +125,9 @@ public class PlayerController : MonoBehaviour
 
         isDamaged = true; // 피해 상태 설정
 
-        int dirc = rigid.velocity.x > 0 ? 1 : -1;
-        rigid.AddForce(new Vector2(dirc, 0) * 4, ForceMode2D.Impulse); // 반대 방향으로 밀어내기
+        // Calculate direction based on the target position
+        Vector2 hitDirection = (transform.position - (Vector3)targetPos).normalized;
+        rigid.AddForce(hitDirection * 4, ForceMode2D.Impulse); // 반대 방향으로 밀어내기
 
         Invoke("OffDamaged", 1); // 일정 시간 후 피해 상태 해제
     }
