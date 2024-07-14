@@ -101,70 +101,41 @@ public class PlayerController : MonoBehaviour
         {
             OnDamaged1(collision.transform.position);
         }
-
-        // 슬라임에 부딪혔을 때
-        if (collision.gameObject.tag == "Slime")
-        {
-            if (rigid.velocity.y < 0 && transform.position.y > collision.transform.position.y)
-            {
-                OnDamaged1(collision.transform.position);
-                
-            }
-            else
-            {
-                OnDamaged2(collision.transform.position);
-                UserInterface.UseHp(50);
-            }
-        }
     }
 
-        private void OnDamaged(Vector2 targetPos)
-        {
-            UserInterface.UseHp(Trap_damage);
-            rigid.velocity = Vector2.zero; // 이동 속도 초기화
-            gameObject.layer = 11; // layer 변경
-            spriteRenderer.color = new Color(1, 1, 1, 0.4f); // 스프라이트 반투명 처리
+    private void OnDamaged(Vector2 targetPos)
+    {
+        UserInterface.UseHp(Trap_damage);
+        rigid.velocity = Vector2.zero; // 이동 속도 초기화
+        gameObject.layer = 11; // layer 변경
+        spriteRenderer.color = new Color(1, 1, 1, 0.4f); // 스프라이트 반투명 처리
 
-            isDamaged = true; // 피해 상태 설정
+        isDamaged = true; // 피해 상태 설정
 
-            // Calculate direction based on the target position
-            Vector2 hitDirection = (transform.position - (Vector3)targetPos).normalized;
-            rigid.AddForce(hitDirection * 4, ForceMode2D.Impulse); // 반대 방향으로 밀어내기
+        // Calculate direction based on the target position
+        Vector2 hitDirection = (transform.position - (Vector3)targetPos).normalized;
+        rigid.AddForce(hitDirection * 4, ForceMode2D.Impulse); // 반대 방향으로 밀어내기
 
-            Invoke("OffDamaged", 1); // 일정 시간 후 피해 상태 해제
-        }
-
-        private void OnDamaged1(Vector2 targetPos)
-        {
-            rigid.velocity = Vector2.zero; // 이동 속도 초기화
-
-            isDamaged = true; // 피해 상태 설정
-
-            // Calculate direction based on the target position
-            Vector2 hitDirection = (transform.position - (Vector3)targetPos).normalized;
-            rigid.AddForce(hitDirection * 4, ForceMode2D.Impulse); // 반대 방향으로 밀어내기
-
-            Invoke("OffDamaged", 1); // 일정 시간 후 피해 상태 해제
-        }
-        private void OnDamaged2(Vector2 targetPos)
-        {
-            UserInterface.UseHp(Trap_damage);
-            rigid.velocity = Vector2.zero; // 이동 속도 초기화
-            gameObject.layer = 11; // layer 변경
-            spriteRenderer.color = new Color(1, 1, 1, 0.4f); // 스프라이트 반투명 처리
-
-            isDamaged = true; // 피해 상태 설정
-
-            // Calculate direction based on the target position
-            Vector2 hitDirection = (transform.position - (Vector3)targetPos).normalized;
-            rigid.AddForce(hitDirection * 8, ForceMode2D.Impulse); // 반대 방향으로 밀어내기
-
-            Invoke("OffDamaged", 1); // 일정 시간 후 피해 상태 해제
-        }
-        void OffDamaged()
-        {
-            isDamaged = false; // 피해 상태 해제
-            gameObject.layer = 10; // layer 변경
-            spriteRenderer.color = new Color(1, 1, 1, 1); // 스프라이트 원래대로 돌리기
-        }
+        Invoke("OffDamaged", 1); // 일정 시간 후 피해 상태 해제
     }
+
+    private void OnDamaged1(Vector2 targetPos)
+    {
+        rigid.velocity = Vector2.zero; // 이동 속도 초기화
+
+        isDamaged = true; // 피해 상태 설정
+
+        // Calculate direction based on the target position
+        Vector2 hitDirection = (transform.position - (Vector3)targetPos).normalized;
+        rigid.AddForce(hitDirection * 4, ForceMode2D.Impulse); // 반대 방향으로 밀어내기
+
+        Invoke("OffDamaged", 1); // 일정 시간 후 피해 상태 해제
+    }
+
+    void OffDamaged()
+    {
+        isDamaged = false; // 피해 상태 해제
+        gameObject.layer = 10; // layer 변경
+        spriteRenderer.color = new Color(1, 1, 1, 1); // 스프라이트 원래대로 돌리기
+    }
+}
