@@ -11,6 +11,6 @@ public class Slime : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rigid.velocity = new Vector2(-3,rigid.velocity.y);
+        rigid.velocity = new Vector2(-5,rigid.velocity.y);
     }
 }
