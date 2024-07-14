@@ -18,6 +18,8 @@ public class UserInterface : MonoBehaviour
     public int Hp
     {
         get => _hp;
+        // HP�� PlayerController������ ���� �ϵ��� private���� ó��
+        // Mathf.Clamp �Լ��� ����ؼ� hp�� 0���� �Ʒ��� �������� �ʰ� �մϴ�.
         private set => _hp = Mathf.Clamp(value, 0, (int)_hpBar.maxValue);
     }
 
