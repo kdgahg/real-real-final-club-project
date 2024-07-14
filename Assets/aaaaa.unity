@@ -340,7 +340,7 @@ GameObject:
   - component: {fileID: 102869292}
   m_Layer: 0
   m_Name: ' Slime'
-  m_TagString: Slime
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -371,7 +371,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!212 &102869288
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -436,8 +436,8 @@ Transform:
   m_GameObject: {fileID: 102869286}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.33, y: -3.27, z: 0}
-  m_LocalScale: {x: 1.2623736, y: 1.209215, z: 1}
+  m_LocalPosition: {x: 11.33, y: 1.13, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -452,7 +452,7 @@ Animator:
   m_GameObject: {fileID: 102869286}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 46fb585eb171e3f40a727c397a6cbc53, type: 2}
+  m_Controller: {fileID: 9100000, guid: 34dfa39eec921ae4e86c93705e4ad8c7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -508,7 +508,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.9, y: 0.8}
+  m_Size: {x: 0.9, y: 0.9}
   m_EdgeRadius: 0
 --- !u!114 &102869292
 MonoBehaviour:
@@ -2030,7 +2030,6 @@ MonoBehaviour:
   jumpForce: 6
   maxSpeed: 4
   Trap_damage: 0
-  Slime: 0
   UserInterface: {fileID: 1168778921}
 --- !u!61 &974439565
 BoxCollider2D:

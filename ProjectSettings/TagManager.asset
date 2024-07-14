@@ -7,7 +7,6 @@ TagManager:
   - Ground
   - Enemy
   - trap
-  - Slime
   layers:
   - Default
   - TransparentFX
